@@ -51,6 +51,7 @@
 </head>
 <body>
     <h2>Welcome, Admin!</h2>
+    <p><a href="manage_users.php">Manage Users</a></p>
     <p><a href="logout.php">Logout</a></p>
 
     <h3>Add Product</h3>
