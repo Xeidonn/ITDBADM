@@ -62,8 +62,13 @@ BEGIN
 END;
 $$ DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER log_deleted_user
+BEFORE DELETE ON Users
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Deleted_Users (deleted_user_id, username, email)
+    VALUES (OLD.user_id, OLD.username, OLD.email);
+END;
 
-
-
-
-
+$$ DELIMITER ;
