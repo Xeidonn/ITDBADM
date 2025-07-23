@@ -62,6 +62,7 @@ BEGIN
 END;
 $$ DELIMITER ;
 
+-- Trigger to log/aduit user details before deletion
 DELIMITER $$
 CREATE TRIGGER log_deleted_user
 BEFORE DELETE ON Users
