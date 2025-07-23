@@ -25,7 +25,7 @@ if (!$product) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($product['name']); ?> | XD Hobby Shop</title>
-    <link rel="stylesheet" href="../CSS/main.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <header>
@@ -55,6 +55,7 @@ if (!$product) {
                         <label for="quantity">Quantity</label>
                         <input type="number" name="quantity" id="quantity" value="1" min="1" required>
                         <button type="submit">Add to Cart</button>
+                        <button type="button" onclick="window.history.back();">Back</button>
                     </form>
                 <?php else: ?>
                     <p><a href="login.php">Login</a> to buy this product.</p>

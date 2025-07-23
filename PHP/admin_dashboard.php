@@ -9,7 +9,7 @@
     }
 
     // Handle product addition
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_product'])) {
         $name = $_POST['name'];
         $description = $_POST['description'];
         $price = $_POST['price'];
@@ -34,6 +34,11 @@
     // Fetch categories and currencies for the form
     $categories = $conn->query("SELECT * FROM Categories");
     $currencies = $conn->query("SELECT * FROM Currencies");
+
+    // Fetch all products for the table
+    $products = $conn->query("SELECT p.*, c.category_name, cur.currency_code, cur.symbol FROM Products p 
+                              JOIN Categories c ON p.category_id = c.category_id
+                              JOIN Currencies cur ON p.currency_id = cur.currency_id");
 ?>
 
 <!DOCTYPE html>
@@ -42,11 +47,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../CSS/main.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <h2>Welcome, Admin!</h2>
-    <p><a href="index.php">Back to Main Page</a></p>
+    <p><a href="logout.php">Logout</a></p>
 
     <h3>Add Product</h3>
     <form method="POST" action="admin_dashboard.php">
@@ -76,7 +81,38 @@
             <?php endwhile; ?>
         </select>
 
-        <button type="submit">Add Product</button>
+        <button type="submit" name="add_product">Add Product</button>
     </form>
+
+    <h3>Product List</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock Quantity</th>
+                <th>Category</th>
+                <th>Currency</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($product = $products->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($product['name']); ?></td>
+                    <td><?php echo htmlspecialchars($product['description']); ?></td>
+                    <td><?php echo "₱" . number_format($product['price'], 2); ?></td>
+                    <td><?php echo $product['stock_quantity']; ?></td>
+                    <td><?php echo htmlspecialchars($product['category_name']); ?></td>
+                    <td><?php echo htmlspecialchars($product['currency_code']) . " (" . $product['symbol'] . ")"; ?></td>
+                    <td>
+                        <a href="edit_product.php?id=<?php echo $product['product_id']; ?>">Edit</a> |
+                        <a href="delete_product.php?id=<?php echo $product['product_id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
 </body>
 </html>

@@ -43,7 +43,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../CSS/main.css">
+    <link rel="stylesheet" href="main.css">
     <title>Login</title>
 </head>
 <body>
@@ -56,6 +56,7 @@
         <input type="password" id="password" name="password" required><br>
 
         <button type="submit">Login</button>
+        <button type="button" onclick="window.history.back();">Back</button>
     </form>
 
     <p>OR</p>
@@ -64,3 +65,4 @@
     <p><a href="admin_login.php">Login as Administrator</a></p>
 </body>
 </html>
+
