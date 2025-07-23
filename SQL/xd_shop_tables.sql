@@ -97,5 +97,13 @@ CREATE TABLE Transaction_Log (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
+-- Account Audit History Table
+CREATE TABLE Audit_Deleted_Users (
+    audit_id INT PRIMARY KEY AUTO_INCREMENT,
+    deleted_user_id INT,
+    username VARCHAR(50),
+    email VARCHAR(100),
+    deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 show tables;
 
