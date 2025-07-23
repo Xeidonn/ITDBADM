@@ -56,6 +56,29 @@ END;
 //
 DELIMITER ;
 
+-- Get list of all users (excluding passwords)
+DELIMITER $$
+CREATE PROCEDURE get_all_users()
+BEGIN
+    SELECT u.user_id, u.username, u.email, u.created_at, r.role_name
+    FROM Users u
+    JOIN Roles r ON u.role_id = r.role_id;
+END;
+$$
+DELIMITER ;
+
+-- Delete user by ID
+DELIMITER $$
+CREATE PROCEDURE delete_user_by_id(IN target_user_id INT)
+BEGIN
+    DELETE FROM Users
+    WHERE user_id = target_user_id;
+END;
+$$
+DELIMITER ;
+
+
+
 
 
 
