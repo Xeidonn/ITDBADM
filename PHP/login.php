@@ -1,7 +1,6 @@
 <?php
-    include('Mysqlconnection.php');
-
     session_start();
+    include('Mysqlconnection.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
@@ -17,20 +16,27 @@
         $user = $result->fetch_assoc();
 
         if ($user && password_verify($password, $user['password'])) {
+            // User is successfully logged in
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role_id'] = $user['role_id'];
+
+            // Clear the cart for the new user (if any) in localStorage
+            echo "<script>
+                localStorage.removeItem('cart');  // Clear the previous cart data on new login
+                window.location.href = 'index.php';  // Redirect to homepage or user dashboard
+            </script>";
 
             // Redirect to the appropriate page based on role
             if ($user['role_id'] == 1) {
                 // Admin: Redirect to admin dashboard
                 header("Location: admin_dashboard.php");
             } elseif ($user['role_id'] == 3) {
-                // Customer: Redirect to customer dashboard
+                // Customer: Redirect to customer dashboard or homepage
                 header("Location: index.php");
             }
         } else {
-            echo "Invalid credentials.";
+            echo "<script>alert('Invalid credentials. Please try again.');</script>";
         }
 
         $stmt->close();
@@ -65,4 +71,3 @@
     <p><a href="admin_login.php">Login as Administrator</a></p>
 </body>
 </html>
-
