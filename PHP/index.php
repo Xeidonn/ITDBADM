@@ -31,7 +31,7 @@ $result = $conn->query($sql);
                 cart.forEach((item, index) => {
                     const productItem = document.createElement('div');
                     productItem.classList.add('cart-item');
-                    productItem.innerHTML = `
+                    productItem.innerHTML = ` 
                         <p><strong>${item.name}</strong></p>
                         <p>₱${item.price.toFixed(2)} x ${item.quantity}</p>
                         <p>Total: ₱${(item.price * item.quantity).toFixed(2)}</p>
@@ -43,6 +43,15 @@ $result = $conn->query($sql);
             } else {
                 cartContainer.innerHTML = '<p>Your cart is empty.</p>';
             }
+
+            // Add Checkout Button
+            const checkoutButton = document.createElement('button');
+            checkoutButton.innerText = 'Checkout';
+            checkoutButton.onclick = function() {
+                // Redirect to checkout_page.php
+                window.location.href = 'checkout_page.php';
+            };
+            cartContainer.appendChild(checkoutButton);
 
             // Toggle the cart modal visibility
             document.getElementById('cartModal').style.display = 'block';
@@ -175,6 +184,15 @@ $result = $conn->query($sql);
         .account-button:hover {
             background-color: #3E5F44;
         }
+
+        /* Hide Add to Cart Button if Logged Out */
+        .add-to-cart-btn {
+            display: block;
+        }
+
+        .add-to-cart-btn.logged-out {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -189,9 +207,12 @@ $result = $conn->query($sql);
                 <a href="logout.php">Logout</a>
                 <a href="user_account.php" class="account-button">Account</a>
             <?php endif; ?>
-            <button id="checkCartBtn" onclick="openCart()" style="border: 1px solid; padding: 5px 10px;">
-                Check Cart <span id="cartCount"></span>
-            </button>
+            <!-- Conditionally hide "Add to Cart" button when logged out -->
+            <?php if(isset($_SESSION['username'])): ?>
+                <button id="checkCartBtn" onclick="openCart()" style="border: 1px solid; padding: 5px 10px;">
+                    Check Cart <span id="cartCount"></span>
+                </button>
+            <?php endif; ?>
         </nav>
     </header>
 
@@ -211,6 +232,11 @@ $result = $conn->query($sql);
                         <h4><?php echo htmlspecialchars($product['name']); ?></h4>
                         <p class="price">₱<?php echo number_format($product['price'], 2); ?> PHP</p>
                     </a>
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <button class="add-to-cart-btn" onclick="addToCart(<?php echo $product['product_id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>)">Add to Cart</button>
+                    <?php else: ?>
+                        <button class="add-to-cart-btn logged-out" disabled>Add to Cart (Login Required)</button>
+                    <?php endif; ?>
                 </div>
             <?php endwhile; ?>
         </div>
