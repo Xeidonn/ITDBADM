@@ -107,3 +107,10 @@ CREATE TABLE Audit_Deleted_Users (
 );
 show tables;
 
+-- Account Deletion Log Table for Admin Side
+CREATE TABLE User_Transaction_Log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    action_type VARCHAR(50),
+    action_timestamp DATETIME DEFAULT NOW()
+);
