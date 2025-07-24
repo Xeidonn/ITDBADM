@@ -67,16 +67,30 @@ END;
 $$
 DELIMITER ;
 
--- Delete user by ID
-DELIMITER $$
-CREATE PROCEDURE delete_user_by_id(IN target_user_id INT)
-BEGIN
-    DELETE FROM Users
-    WHERE user_id = target_user_id;
-END;
-$$
-DELIMITER ;
+-- Delete user by ID with ACID PROPERTY AND COMMIT ROLLBACK - THIS IS UPDATED ONE
+DELIMITER $$  
+CREATE PROCEDURE delete_user_by_id(IN target_user_id INT)  
+BEGIN  
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION  
+    BEGIN  
+        ROLLBACK;  
+    END;  
 
+    START TRANSACTION;
+
+    -- Prevent deletion of admin users (assuming role_id = 1 = admin)
+    IF (SELECT role_id FROM Users WHERE user_id = target_user_id) != 1 THEN
+        DELETE FROM Users WHERE user_id = target_user_id;
+
+        -- Log the transaction
+        INSERT INTO User_Transaction_Log (user_id, action_type)
+        VALUES (target_user_id, 'DELETE_USER');
+    END IF;
+
+    COMMIT;  
+END;  
+$$  
+DELIMITER ;
 
 
 
