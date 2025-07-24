@@ -58,6 +58,15 @@ if (!$product) {
                 cartContainer.innerHTML = '<p>Your cart is empty.</p>';
             }
 
+            // Add Checkout Button
+            const checkoutButton = document.createElement('button');
+            checkoutButton.innerText = 'Checkout';
+            checkoutButton.onclick = function() {
+                // Redirect to checkout_page.php
+                window.location.href = 'checkout_page.php';
+            };
+            cartContainer.appendChild(checkoutButton);
+
             // Toggle the cart modal visibility
             document.getElementById('cartModal').style.display = 'block';
         }
