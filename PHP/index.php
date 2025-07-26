@@ -3,7 +3,7 @@ session_start();
 include('Mysqlconnection.php');
 
 // Fetch products from the database
-$sql = "SELECT * FROM Products";
+$sql = "SELECT p.*, cur.symbol, cur.currency_code FROM Products p JOIN Currencies cur ON p.currency_id = cur.currency_id";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -12,7 +12,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | XD Hobby Shop</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../CSS/main.css">
     <script>
         // Function to update the cart count
         function updateCartCount() {
@@ -32,11 +32,11 @@ $result = $conn->query($sql);
                     const productItem = document.createElement('div');
                     productItem.classList.add('cart-item');
                     productItem.innerHTML = ` 
-                        <p><strong>${item.name}</strong></p>
-                        <p>₱${item.price.toFixed(2)} x ${item.quantity}</p>
-                        <p>Total: ₱${(item.price * item.quantity).toFixed(2)}</p>
-                        <button onclick="removeFromCart(${index})">Remove all</button>
-                        <button onclick="decreaseQuantity(${index})">Remove</button>
+                    <p><strong>${item.name}</strong></p>
+                    <p>${item.symbol}${item.price.toFixed(2)} ${item.currency_code} x ${item.quantity}</p>
+                    <p>Total: ${item.symbol}${(item.price * item.quantity).toFixed(2)} ${item.currency_code}</p>
+                    <button onclick="removeFromCart(${index})">Remove all</button>
+                    <button onclick="decreaseQuantity(${index})">Remove</button>
                     `;
                     cartContainer.appendChild(productItem);
                 });
@@ -225,15 +225,19 @@ $result = $conn->query($sql);
         <div class="products">
             <?php while ($product = $result->fetch_assoc()): ?>
                 <div class="card">
-                    <a href="product.php?id=<?php echo $product['product_id']; ?>">
-                        <?php if (!empty($product['image_url'])): ?>
-                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" style="max-width:350px; border-radius:12px;">
-                        <?php endif; ?>
-                        <h4><?php echo htmlspecialchars($product['name']); ?></h4>
-                        <p class="price">₱<?php echo number_format($product['price'], 2); ?> PHP</p>
-                    </a>
+                    <?php if (!empty($product['image_url'])): ?>
+                        <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" style="max-width:350px; border-radius:12px;">
+                    <?php endif; ?>
+                    <h4><?php echo htmlspecialchars($product['name']); ?></h4>
+                    <p class="price"><?php echo htmlspecialchars($product['symbol']) . number_format($product['price'], 2) . ' ' . htmlspecialchars($product['currency_code']); ?></p>
                     <?php if (isset($_SESSION['username'])): ?>
-                        <button class="add-to-cart-btn" onclick="addToCart(<?php echo $product['product_id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>)">Add to Cart</button>
+                        <button class="add-to-cart-btn" onclick="addToCart(
+                        <?php echo $product['product_id']; ?>,
+                        '<?php echo addslashes($product['name']); ?>',
+                        <?php echo $product['price']; ?>,
+                        '<?php echo addslashes($product['symbol']); ?>',
+                        '<?php echo addslashes($product['currency_code']); ?>'
+                    )">Add to Cart</button>
                     <?php else: ?>
                         <button class="add-to-cart-btn logged-out" disabled>Add to Cart (Login Required)</button>
                     <?php endif; ?>
@@ -252,37 +256,37 @@ $result = $conn->query($sql);
     </div>
 
     <script>
-        function addToCart(productId, productName, productPrice) {
-            // Get cart from localStorage, or create a new one if it doesn't exist
+        function addToCart(productId, productName, productPrice, productSymbol, productCurrencyCode) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-            // Check if the product is already in the cart
             const productIndex = cart.findIndex(item => item.product_id === productId);
 
             if (productIndex >= 0) {
-                // If the product is already in the cart, just increase the quantity
                 cart[productIndex].quantity += 1;
             } else {
-                // If the product is not in the cart, add it
                 cart.push({
                     product_id: productId,
                     name: productName,
                     price: productPrice,
+                    symbol: productSymbol,
+                    currency_code: productCurrencyCode,
                     quantity: 1
                 });
             }
 
-            // Save the updated cart back to localStorage
             localStorage.setItem('cart', JSON.stringify(cart));
 
-            // Show confirmation message
             document.getElementById('cartMessage').innerText = 'Added to Cart';
             setTimeout(() => {
                 document.getElementById('cartMessage').innerText = '';
-            }, 2000);  // Hide message after 2 seconds
+            }, 2000);
 
             updateCartCount();
+
+            if (document.getElementById('cartModal').style.display === 'block') {
+                openCart();
+            }
         }
     </script>
+    <div id="cartMessage" style="color:green; text-align:center; margin:10px 0;"></div>
 </body>
 </html>

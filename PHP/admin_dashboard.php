@@ -47,13 +47,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../CSS/main.css">
 </head>
 <body>
-    <h2>Welcome, Admin!</h2>
-    <p><a href="manage_users.php">Manage Users</a></p>
-    <p><a href="logout.php">Logout</a></p>
+    <header>
+        <h1>XD Hobby Shop - Admin Dashboard</h1>
+        <nav>
+            <a href="admin_dashboard.php">Dashboard</a>
+            <a href="manage_users.php">Manage Users</a>
+            <a href="logout.php">Logout</a>
+        </nav>
+    </header>
 
+    <h2>Welcome, Admin!</h2>
     <h3>Add Product</h3>
     <form method="POST" action="admin_dashboard.php">
         <label for="name">Product Name</label>
@@ -70,14 +76,20 @@
 
         <label for="category_id">Category</label>
         <select id="category_id" name="category_id" required>
-            <?php while ($category = $categories->fetch_assoc()): ?>
+            <?php
+            // Re-fetch categories for the select if needed
+            $categories = $conn->query("SELECT * FROM Categories");
+            while ($category = $categories->fetch_assoc()): ?>
                 <option value="<?php echo $category['category_id']; ?>"><?php echo $category['category_name']; ?></option>
             <?php endwhile; ?>
         </select>
 
         <label for="currency_id">Currency</label>
         <select id="currency_id" name="currency_id" required>
-            <?php while ($currency = $currencies->fetch_assoc()): ?>
+            <?php
+            // Re-fetch currencies for the select if needed
+            $currencies = $conn->query("SELECT * FROM Currencies");
+            while ($currency = $currencies->fetch_assoc()): ?>
                 <option value="<?php echo $currency['currency_id']; ?>"><?php echo $currency['currency_code']; ?> (<?php echo $currency['symbol']; ?>)</option>
             <?php endwhile; ?>
         </select>
@@ -103,7 +115,7 @@
                 <tr>
                     <td><?php echo htmlspecialchars($product['name']); ?></td>
                     <td><?php echo htmlspecialchars($product['description']); ?></td>
-                    <td><?php echo "₱" . number_format($product['price'], 2); ?></td>
+                    <td><?php echo htmlspecialchars($product['symbol']) . number_format($product['price'], 2) . " " . htmlspecialchars($product['currency_code']); ?></td>
                     <td><?php echo $product['stock_quantity']; ?></td>
                     <td><?php echo htmlspecialchars($product['category_name']); ?></td>
                     <td><?php echo htmlspecialchars($product['currency_code']) . " (" . $product['symbol'] . ")"; ?></td>

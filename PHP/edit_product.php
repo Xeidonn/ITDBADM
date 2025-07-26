@@ -64,7 +64,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../CSS/main.css">
     <script>
         // Show a success notification and redirect after a few seconds
         <?php if ($successMessage): ?>
