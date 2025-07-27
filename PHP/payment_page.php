@@ -1,5 +1,50 @@
 <?php
 session_start();
+include('Mysqlconnection.php');
+
+// Handle payment submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
+    $user_id = $_SESSION['user_id'];
+    $currency = $_POST['currency'];
+    $total_amount = $_POST['amount'];
+    $payment_method = $_POST['payment_method'];
+    $payment_status = 'Paid'; // or 'Pending'
+    $cart = json_decode($_POST['cart_json'], true);
+
+    // Get currency_id from Currencies table
+    $stmt = $conn->prepare("SELECT currency_id FROM Currencies WHERE currency_code = ?");
+    $stmt->bind_param("s", $currency);
+    $stmt->execute();
+    $stmt->bind_result($currency_id);
+    $stmt->fetch();
+    $stmt->close();
+
+    // 1. Insert into Orders
+    $stmt = $conn->prepare("INSERT INTO Orders (user_id, total_amount, currency_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("idi", $user_id, $total_amount, $currency_id);
+    $stmt->execute();
+    $order_id = $stmt->insert_id;
+    $stmt->close();
+
+    // 2. Insert each cart item into Order_Items
+    foreach ($cart as $item) {
+        $stmt = $conn->prepare("INSERT INTO Order_Items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("iiid", $order_id, $item['product_id'], $item['quantity'], $item['price']);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // 3. Insert into Transaction_Log
+    $stmt = $conn->prepare("INSERT INTO Transaction_Log (order_id, payment_method, payment_status, amount) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("issd", $order_id, $payment_method, $payment_status, $total_amount);
+    $stmt->execute();
+    $stmt->close();
+
+    // Clear cart and redirect
+    echo "<script>localStorage.removeItem('cart');localStorage.removeItem('totalAmount');</script>";
+    echo "<script>alert('Order placed successfully!');window.location.href='index.php';</script>";
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,13 +68,13 @@ session_start();
                 currencySymbol = '₱';
             }
             else if (currency === 'JPY') {
-                conversionRate = 2.5; // 1 PHP = 2.5 JPY (example rate)
+                conversionRate = 2.58; // 1 PHP = 2.58 JPY (example rate)
                 currencySymbol = '¥';
             } else if (currency === 'USD') {
-                conversionRate = 0.02; // 1 PHP = 0.02 USD (example rate)
+                conversionRate = 0.017; // 1 PHP = 0.017 USD (example rate)
                 currencySymbol = '$';
             } else if (currency === 'EUR') {
-                conversionRate = 0.018; // 1 PHP = 0.018 EUR (example rate)
+                conversionRate = 0.015; // 1 PHP = 0.015 EUR (example rate)
                 currencySymbol = '€';
             }
 
@@ -38,6 +83,10 @@ session_start();
 
             // Display the converted amount
             document.getElementById('convertedAmount').innerText = currencySymbol + convertedAmount.toFixed(2);
+
+            // Set hidden amount and currency for form submission
+            document.getElementById('hiddenAmount').value = convertedAmount.toFixed(2);
+            document.getElementById('currency_hidden').value = currency;
         }
 
         // Function to show the appropriate payment form based on the selected method
@@ -56,6 +105,17 @@ session_start();
             } else if (paymentMethod === 'cashOnDelivery') {
                 document.getElementById('codMessage').style.display = 'block';
             }
+        }
+
+        // Before submitting, set hidden fields for amount, currency, and cart
+        function preparePaymentForm() {
+            // Set amount and currency
+            convertCurrency();
+
+            // Set cart JSON
+            const cart = localStorage.getItem('cart');
+            document.getElementById('cart_json').value = cart ? cart : '[]';
+            return true;
         }
 
         // Initialize the page and load the total amount
@@ -84,12 +144,12 @@ session_start();
 
     <section class="content">
         <h3>Proceed to Payment</h3>
-        <div>
+        <form method="POST" action="payment_page.php" onsubmit="return preparePaymentForm();">
             <p><strong>Total Amount (PHP): </strong><span id="totalAmount"></span></p>
 
             <!-- Payment Method Selection -->
             <p><strong>Payment Method:</strong></p>
-            <select id="paymentMethod" onchange="showPaymentForm()">
+            <select id="paymentMethod" name="payment_method" onchange="showPaymentForm()" required>
                 <option value="creditCard">Credit Card</option>
                 <option value="debitCard">Debit Card</option>
                 <option value="cashOnDelivery">Cash on Delivery</option>
@@ -99,7 +159,7 @@ session_start();
 
             <!-- Currency Selection -->
             <p><strong>Select Currency:</strong></p>
-            <select id="currency" onchange="convertCurrency()">
+            <select id="currency" name="currency" onchange="convertCurrency()" required>
                 <option value="PHP">PHP</option>
                 <option value="USD">USD</option>
                 <option value="JPY">JPY</option>
@@ -114,17 +174,17 @@ session_start();
             <!-- Credit Card Details -->
             <div id="creditCardForm" style="display:none;">
                 <p><strong>Enter Credit Card Details:</strong></p>
-                <input type="text" placeholder="Card Number" id="cardNumber"><br><br>
-                <input type="text" placeholder="Expiration Date" id="expDate"><br><br>
-                <input type="text" placeholder="CVV" id="cvv"><br><br>
+                <input type="text" placeholder="Card Number" id="cardNumber" name="card_number"><br><br>
+                <input type="text" placeholder="Expiration Date" id="expDate" name="exp_date"><br><br>
+                <input type="text" placeholder="CVV" id="cvv" name="cvv"><br><br>
             </div>
 
             <!-- Debit Card Details -->
             <div id="debitCardForm" style="display:none;">
                 <p><strong>Enter Debit Card Details:</strong></p>
-                <input type="text" placeholder="Card Number" id="debitCardNumber"><br><br>
-                <input type="text" placeholder="Expiration Date" id="debitExpDate"><br><br>
-                <input type="text" placeholder="CVV" id="debitCvv"><br><br>
+                <input type="text" placeholder="Card Number" id="debitCardNumber" name="debit_card_number"><br><br>
+                <input type="text" placeholder="Expiration Date" id="debitExpDate" name="debit_exp_date"><br><br>
+                <input type="text" placeholder="CVV" id="debitCvv" name="debit_cvv"><br><br>
             </div>
 
             <!-- Cash on Delivery (COD) Message -->
@@ -132,40 +192,20 @@ session_start();
                 <p><strong>You selected Cash on Delivery. Please have the exact amount ready upon delivery.</strong></p>
             </div>
 
+            <!-- Hidden fields for backend processing -->
+            <input type="hidden" name="amount" id="hiddenAmount" value="">
+            <input type="hidden" name="currency" id="currency_hidden" value="">
+            <input type="hidden" name="cart_json" id="cart_json" value="">
+
             <!-- Submit Button -->
-            <button>Submit Payment</button>
-        </div>
+            <button type="submit" name="submit_payment">Submit Payment</button>
+        </form>
 
         <!-- Back to Checkout -->
         <br>
         <a href="checkout_page.php">
-            <button>Back to Checkout</button>
+            <button type="button">Back to Checkout</button>
         </a>
     </section>
-
-    <style>
-        .content {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        button {
-            background-color: #3E5F44;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #5E936C;
-        }
-    </style>
 </body>
 </html>

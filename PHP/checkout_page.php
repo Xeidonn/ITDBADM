@@ -1,13 +1,12 @@
 <?php
 session_start();
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout | XD Hobby Shop</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../CSS/main.css">
     <script>
         // Function to load cart items from localStorage and display them on the page
         function loadCart() {
@@ -15,22 +14,26 @@ session_start();
             const cartContainer = document.getElementById('cartDetails');
             let totalAmount = 0;
 
+            cartContainer.innerHTML = ''; // Clear previous content
+
             if (cart.length > 0) {
                 cart.forEach(item => {
                     const productItem = document.createElement('div');
                     productItem.classList.add('checkout-item');
                     productItem.innerHTML = `
                         <p><strong>${item.name}</strong></p>
-                        <p>₱${item.price.toFixed(2)} x ${item.quantity}</p>
-                        <p>Total: ₱${(item.price * item.quantity).toFixed(2)}</p>
+                        <p>${item.symbol}${item.price.toFixed(2)} ${item.currency_code} x ${item.quantity}</p>
+                        <p>Total: ${item.symbol}${(item.price * item.quantity).toFixed(2)} ${item.currency_code}</p>
                     `;
                     cartContainer.appendChild(productItem);
                     totalAmount += item.price * item.quantity;
                 });
 
-                // Display total amount
+                // Display total amount (use the symbol and code of the first item)
                 const totalElement = document.createElement('p');
-                totalElement.innerHTML = `<strong>Total: ₱${totalAmount.toFixed(2)}</strong>`;
+                const symbol = cart[0].symbol || '';
+                const currency_code = cart[0].currency_code || '';
+                totalElement.innerHTML = `<strong>Total: ${symbol}${totalAmount.toFixed(2)} ${currency_code}</strong>`;
                 cartContainer.appendChild(totalElement);
             } else {
                 cartContainer.innerHTML = '<p>Your cart is empty.</p>';
@@ -61,47 +64,11 @@ session_start();
     <section class="content">
         <h3>Checkout</h3>
         <div id="cartDetails" class="checkout-details"></div>
-        <!-- Updated button to go back to home page (index.php) -->
-        <button onclick="window.location.href='index.php';">Back to Shopping</button>
+        <button class="checkout-btn-back" onclick="window.location.href='index.php';">Back to Shopping</button>
         <br>
         <a href="payment_page.php">
-            <button>Proceed to Payment</button>
+            <button class="checkout-btn" type="button">Proceed to Payment</button>
         </a>
     </section>
-
-    <style>
-        .checkout-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .checkout-details {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .checkout-details p {
-            font-size: 1.2rem;
-            color: #3E5F44;
-        }
-
-        button {
-            background-color: #3E5F44;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #5E936C;
-        }
-    </style>
 </body>
 </html>
