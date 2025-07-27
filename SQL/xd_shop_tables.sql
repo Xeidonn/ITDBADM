@@ -96,6 +96,10 @@ CREATE TABLE Transaction_Log (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
+-- PAKI GAWA TO PARA SA TRANSACTION_LOG TABLE
+ALTER TABLE transaction_log
+ADD COLUMN currency_id INT,
+ADD CONSTRAINT fk_transaction_currency FOREIGN KEY (currency_id) REFERENCES currencies(currency_id);
 
 -- Account Audit History Table
 CREATE TABLE Audit_Deleted_Users (
