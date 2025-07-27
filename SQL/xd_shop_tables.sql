@@ -114,3 +114,20 @@ CREATE TABLE User_Transaction_Log (
     action_type VARCHAR(50),
     action_timestamp DATETIME DEFAULT NOW()
 );
+
+
+-- table for total sales audit admin side
+CREATE TABLE sales_audit_log (
+    audit_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    user_id INT,
+    total_amount DECIMAL(10,2),
+    currency_id INT,
+    payment_method VARCHAR(50),
+    payment_status VARCHAR(50),
+    audit_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (currency_id) REFERENCES currencies(currency_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
