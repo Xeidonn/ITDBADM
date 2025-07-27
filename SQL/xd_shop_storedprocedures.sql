@@ -93,6 +93,23 @@ $$
 DELIMITER ;
 
 
+-- stored prcedure for total sales
+DELIMITER $$
+
+CREATE PROCEDURE `get_total_sales`()
+BEGIN
+    SELECT 
+        c.currency_code,
+        c.symbol,
+        SUM(sal.total_amount) AS total_sales
+    FROM sales_audit_log sal
+    JOIN currencies c ON sal.currency_id = c.currency_id
+    GROUP BY sal.currency_id;
+END$$
+
+DELIMITER ;
+
+
 
 
 
