@@ -5,19 +5,28 @@ include('Mysqlconnection.php');
 // Handle payment submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
     $user_id = $_SESSION['user_id'];
-    $currency = $_POST['currency'];
+    $currency = strtoupper($_POST['currency']); // Normalize input to uppercase
     $total_amount = $_POST['amount'];
     $payment_method = $_POST['payment_method'];
     $payment_status = 'Paid'; // or 'Pending'
     $cart = json_decode($_POST['cart_json'], true);
 
-    // Get currency_id from Currencies table
-    $stmt = $conn->prepare("SELECT currency_id FROM Currencies WHERE currency_code = ?");
-    $stmt->bind_param("s", $currency);
-    $stmt->execute();
-    $stmt->bind_result($currency_id);
-    $stmt->fetch();
-    $stmt->close();
+  $currency = strtoupper($_POST['currency']); // Normalize input to uppercase
+
+// Get currency_id from Currencies table
+$currency_id = null;
+$stmt = $conn->prepare("SELECT currency_id FROM Currencies WHERE currency_code = ?");
+$stmt->bind_param("s", $currency);
+$stmt->execute();
+$stmt->bind_result($currency_id);
+$stmt->fetch();
+$stmt->close();
+
+// Fallback to PHP (ID 1) if not found
+if (!$currency_id) {
+    $currency_id = 1;
+}
+
 
     // 1. Insert into Orders
     $stmt = $conn->prepare("INSERT INTO Orders (user_id, total_amount, currency_id) VALUES (?, ?, ?)");
@@ -35,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
     }
 
     // 3. Insert into Transaction_Log
-    $stmt = $conn->prepare("INSERT INTO Transaction_Log (order_id, payment_method, payment_status, amount) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("issd", $order_id, $payment_method, $payment_status, $total_amount);
+$stmt = $conn->prepare("INSERT INTO Transaction_Log (order_id, payment_method, payment_status, amount, currency_id) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_amount, $currency_id);
     $stmt->execute();
     $stmt->close();
 
@@ -76,7 +85,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
             } else if (currency === 'EUR') {
                 conversionRate = 0.015; // 1 PHP = 0.015 EUR (example rate)
                 currencySymbol = '€';
+            }  else if (currency === 'KRW') {
+                conversionRate = 24; // 1 PHP = 0.015 EUR (example rate)
+                currencySymbol = '₩';
             }
+
+            
+
 
             // Calculate the converted amount
             convertedAmount = totalAmount * conversionRate;
@@ -164,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
                 <option value="USD">USD</option>
                 <option value="JPY">JPY</option>
                 <option value="EUR">EUR</option>
+                <option value="KRW">KRW</option>
             </select>
 
             <br><br>
