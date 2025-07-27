@@ -73,3 +73,42 @@ BEGIN
 END;
 
 $$ DELIMITER ;
+
+-- Trigger para sa transaction log
+
+DELIMITER $$
+
+CREATE TRIGGER after_transaction_log_insert
+AFTER INSERT ON transaction_log
+FOR EACH ROW
+BEGIN
+    DECLARE v_user_id INT;
+    DECLARE v_currency_id INT;
+    DECLARE v_total_amount DECIMAL(10,2);
+
+    -- Fetch user_id, total_amount, and currency_id from orders
+    SELECT user_id, total_amount, currency_id
+    INTO v_user_id, v_total_amount, v_currency_id
+    FROM orders
+    WHERE order_id = NEW.order_id;
+
+    -- Insert into audit log
+    INSERT INTO sales_audit_log (
+        order_id,
+        user_id,
+        total_amount,
+        currency_id,
+        payment_method,
+        payment_status
+    )
+    VALUES (
+        NEW.order_id,
+        v_user_id,
+        v_total_amount,
+        v_currency_id,
+        NEW.payment_method,
+        NEW.payment_status
+    );
+END $$
+
+DELIMITER ;
