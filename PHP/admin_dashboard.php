@@ -55,6 +55,7 @@
         <nav>
             <a href="admin_dashboard.php">Dashboard</a>
             <a href="manage_users.php">Manage Users</a>
+            <a href="view_total_sales.php">View Sales</a>
             <a href="logout.php">Logout</a>
         </nav>
     </header>
