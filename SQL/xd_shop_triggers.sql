@@ -25,16 +25,6 @@ BEGIN
 END;
 $$ DELIMITER ;
 
--- Trigger to log transactions
-DELIMITER $$
-CREATE TRIGGER log_transaction
-AFTER INSERT ON Transaction_Log
-FOR EACH ROW
-BEGIN
-    INSERT INTO Transaction_Log (order_id, payment_method, payment_status, amount, timestamp)
-    VALUES (NEW.order_id, NEW.payment_method, NEW.payment_status, NEW.amount, NOW());
-END;
-$$ DELIMITER ;
 
 -- Trigger to set default role for new users
 DELIMITER $$
