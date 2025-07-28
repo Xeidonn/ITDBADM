@@ -1,8 +1,6 @@
 <?php
-// manage_users.php
- session_start();
-    include('Mysqlconnection.php');
-
+session_start();
+include('Mysqlconnection.php');
 
 $currentAdminId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
 
@@ -28,13 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
     exit();
 }
 
-// Fetch users via stored procedure
+// Handle user search
+$searchTerm = isset($_GET['search']) ? '%' . $_GET['search'] . '%' : '%%';
+
+// Fetch users via stored procedure with search filtering
 $users = [];
-if ($result = $conn->query("CALL get_all_users()")) {
+if ($stmt = $conn->prepare("CALL get_all_users_filtered(?)")) {
+    $stmt->bind_param("s", $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
         $users[] = $row;
     }
     $result->close();
+    $stmt->close();
     // Important when using multiple CALLS in same request
     while ($conn->more_results() && $conn->next_result()) { /* flush */ }
 }
@@ -109,6 +114,9 @@ if (isset($_SESSION['manage_users_msg'])) {
             background-color: #aaa !important;
             cursor: not-allowed !important;
         }
+        .search-bar {
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +124,14 @@ if (isset($_SESSION['manage_users_msg'])) {
     <div class="top-links">
         <a href="admin_dashboard.php">← Back to Dashboard</a>
         <a href="account_management_history.php">Account Management History</a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <form method="GET" action="manage_users.php">
+            <input type="text" name="search" placeholder="Search users by username or email" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+            <button type="submit">Search</button>
+        </form>
     </div>
 
     <?php if (!empty($msg)): ?>

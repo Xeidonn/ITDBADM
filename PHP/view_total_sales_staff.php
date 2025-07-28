@@ -72,8 +72,8 @@ $result = $conn->query($sql);
 
     <h2>Total Sales Summary</h2>
     <div class="top-nav">
-        <a href="admin_dashboard.php">← Back to Dashboard</a>
-        <a href="top_best_sellers.php">View Top Products</a>
+        <a href="staff_dashboard.php">← Back to Dashboard</a>
+        <a href="top_best_sellers_staff.php">View Top Products</a>
     </div>
 
     <table>

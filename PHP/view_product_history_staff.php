@@ -72,7 +72,7 @@ $result = $conn->query($sql);
 
     <h2>Product History Log</h2>
     <div class="top-nav">
-        <a href="admin_dashboard.php">← Back to Dashboard</a>
+        <a href="staff_dashboard.php">← Back to Dashboard</a>
     </div>
 
     <table>

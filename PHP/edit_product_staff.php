@@ -2,9 +2,9 @@
     session_start();
     include('Mysqlconnection.php');
 
-    // Check if the user is logged in and is an admin
-    if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
-        header("Location: login.php");  // Redirect to login if not an admin
+    // Check if the user is logged in and is a staff
+    if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
+        header("Location: login.php");  // Redirect to login if not a staff
         exit();
     }
 
@@ -71,7 +71,7 @@
             window.onload = function() {
                 alert("<?php echo $successMessage; ?>");  // Display the success message
                 setTimeout(function() {
-                    window.location.href = "admin_dashboard.php";  // Redirect to admin dashboard after 3-5 seconds
+                    window.location.href = "staff_dashboard.php";  // Redirect to admin dashboard after 3-5 seconds
                 }, 3000);  // 3000ms = 3 seconds
             };
         <?php endif; ?>
@@ -79,10 +79,10 @@
 </head>
 <body>
     <h2>Edit Product</h2>
-    <p><a href="admin_dashboard.php">Back to Dashboard</a></p>
+    <p><a href="staff_dashboard.php">Back to Dashboard</a></p>
 
     <h3>Update Product Details</h3>
-    <form method="POST" action="edit_product.php?id=<?php echo $product['product_id']; ?>">
+    <form method="POST" action="edit_product_staff.php?id=<?php echo $product['product_id']; ?>">
         <label for="name">Product Name</label>
         <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($product['name']); ?>" required>
 

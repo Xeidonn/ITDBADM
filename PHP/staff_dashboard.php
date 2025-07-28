@@ -2,10 +2,9 @@
     session_start();
     include('Mysqlconnection.php');
 
-    // Check if the user is logged in and is an admin
-    if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
-        header("Location: login.php");  // Redirect to login if not an admin
-        exit();
+    // Check if the user is logged in and is a staff 
+    if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
+        header("Location: login.php");  // Redirect to login if not a staff
     }
 
     // Handle product addition
@@ -46,24 +45,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Staff Dashboard</title>
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <header>
-        <h1>XD Hobby Shop - Admin Dashboard</h1>
+        <h1>XD Hobby Shop - Staff Dashboard</h1>
         <nav>
-            <a href="admin_dashboard.php">Dashboard</a>
-            <a href="manage_users.php">Manage Users</a>
-            <a href="view_total_sales.php">View Sales</a>
-            <a href="view_product_history.php">View Product History</a>
+            <a href="staff_dashboard.php">Dashboard</a>
+            <a href="view_total_sales_staff.php">View Sales</a>
+            <a href="view_product_history_staff.php">View Product History</a>
             <a href="logout.php">Logout</a>
         </nav>
     </header>
 
-    <h2>Welcome, Admin!</h2>
+    <h2>Welcome, Staff!</h2>
     <h3>Add Product</h3>
-    <form method="POST" action="admin_dashboard.php">
+    <form method="POST" action="staff_dashboard.php">
         <label for="name">Product Name</label>
         <input type="text" id="name" name="name" required>
 
@@ -122,8 +120,8 @@
                     <td><?php echo htmlspecialchars($product['category_name']); ?></td>
                     <td><?php echo htmlspecialchars($product['currency_code']) . " (" . $product['symbol'] . ")"; ?></td>
                     <td>
-                        <a href="edit_product.php?id=<?php echo $product['product_id']; ?>">Edit</a> |
-                        <a href="delete_product.php?id=<?php echo $product['product_id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                        <a href="edit_product_staff.php?id=<?php echo $product['product_id']; ?>">Edit</a> |
+                        <a href="delete_product_staff.php?id=<?php echo $product['product_id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
                     </td>
                 </tr>
             <?php endwhile; ?>

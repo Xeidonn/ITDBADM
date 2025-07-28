@@ -6,14 +6,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "CALL get_total_sales()";
+$sql = "CALL get_best_selling_products()";
 $result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Total Sales Summary</title>
+    <title>Top Selling Products</title>
     <style>
         body {
             background-color: #e2f0d9;
@@ -62,35 +62,33 @@ $result = $conn->query($sql);
         tr:hover {
             background-color: #f2f2f2;
         }
-
-        .currency-symbol {
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
 
-    <h2>Total Sales Summary</h2>
+    <h2>Top Selling Products</h2>
     <div class="top-nav">
-        <a href="admin_dashboard.php">← Back to Dashboard</a>
-        <a href="top_best_sellers.php">View Top Products</a>
+        <a href="staff_dashboard.php">← Back to Dashboard</a>
+        <a href="view_total_sales_staff.php">View Total Sales</a>
     </div>
 
     <table>
         <tr>
-            <th>Currency</th>
-            <th>Total Sales</th>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Total Quantity Sold</th>
         </tr>
         <?php
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($row['currency_code']) . "</td>";
-                echo "<td>" . number_format($row['total_sales'], 2) . "</td>";
+                echo "<td>" . htmlspecialchars($row['product_id']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['product_name']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['total_quantity_sold']) . "</td>";
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='3'>No sales data available.</td></tr>";
+            echo "<tr><td colspan='3'>No best-selling data available.</td></tr>";
         }
 
         $conn->next_result(); // Clear remaining results

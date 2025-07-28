@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment | XD Hobby Shop</title>
-    <link rel="stylesheet" href="../CSS/main.css">
+    <link rel="stylesheet" href="main.css">
     <script>
         // Function to calculate the converted price based on selected currency
         function convertCurrency() {

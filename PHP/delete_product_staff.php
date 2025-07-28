@@ -2,9 +2,9 @@
     session_start();
     include('Mysqlconnection.php');
 
-    // Check if the user is logged in and is an admin
-    if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
-        header("Location: login.php");  // Redirect to login if not an admin
+    // Check if the user is logged in and is a staff
+    if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 2) {
+        header("Location: login.php");  // Redirect to login if not a staff
         exit();
     }
 
@@ -51,7 +51,7 @@
         if ($delete_stmt->execute()) {
             echo "Product deleted successfully!";
             // Redirect to the admin dashboard or product list
-            header("Location: admin_dashboard.php");
+            header("Location: staff_dashboard.php");
             exit();
             } else {
             echo "Error: " . $delete_stmt->error;
@@ -72,7 +72,7 @@
 </head>
 <body>
     <h2>Delete Product</h2>
-    <p><a href="admin_dashboard.php">Back to Dashboard</a></p>
+    <p><a href="staff_dashboard.php">Back to Dashboard</a></p>
 
     <h3>Are you sure you want to delete the following product?</h3>
     <table border="1">
@@ -98,10 +98,10 @@
         </tbody>
     </table>
 
-    <form method="POST" action="delete_product.php?id=<?php echo $product['product_id']; ?>">
+    <form method="POST" action="delete_product_staff.php?id=<?php echo $product['product_id']; ?>">
         <button type="submit" name="confirm_delete">Yes, Delete Product</button>
     </form>
     
-    <p><a href="admin_dashboard.php">Cancel</a></p>
+    <p><a href="staff_dashboard.php">Cancel</a></p>
 </body>
 </html>
