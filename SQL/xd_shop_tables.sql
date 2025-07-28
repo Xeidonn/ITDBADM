@@ -134,4 +134,16 @@ CREATE TABLE sales_audit_log (
     FOREIGN KEY (currency_id) REFERENCES currencies(currency_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
-
+-- table for product history - add - delete - update
+CREATE TABLE product_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    action ENUM('ADD', 'EDIT', 'DELETE') NOT NULL,
+    name VARCHAR(100),
+    description TEXT,
+    price DECIMAL(10,2),
+    stock_quantity INT,
+    category_id INT,
+    currency_id INT,
+    action_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
