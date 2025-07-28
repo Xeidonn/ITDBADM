@@ -1,6 +1,3 @@
-create schema xd_shop;
-
-use xd_shop;
 
 -- Roles Table
 CREATE TABLE Roles (
@@ -13,7 +10,6 @@ INSERT INTO Roles (role_id, role_name) VALUES
 (2, 'staff'),
 (3, 'customer');
 
-select*from Users;
 
 -- Users Table
 CREATE TABLE Users (
@@ -156,3 +152,4 @@ CREATE TABLE product_history (
     currency_id INT,
     action_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
