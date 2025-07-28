@@ -102,3 +102,47 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+-- lahat ng ito ay trigger para sa pag view ng product history hanggang delete
+DELIMITER ;;
+CREATE TRIGGER trg_product_insert
+AFTER INSERT ON products
+FOR EACH ROW
+BEGIN
+    INSERT INTO product_history (
+        product_id, action, name, description, price, stock_quantity, category_id, currency_id
+    )
+    VALUES (
+        NEW.product_id, 'ADD', NEW.name, NEW.description, NEW.price, NEW.stock_quantity, NEW.category_id, NEW.currency_id
+    );
+END;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE TRIGGER trg_product_update
+AFTER UPDATE ON products
+FOR EACH ROW
+BEGIN
+    INSERT INTO product_history (
+        product_id, action, name, description, price, stock_quantity, category_id, currency_id
+    )
+    VALUES (
+        NEW.product_id, 'EDIT', NEW.name, NEW.description, NEW.price, NEW.stock_quantity, NEW.category_id, NEW.currency_id
+    );
+END;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE TRIGGER trg_product_delete
+BEFORE DELETE ON products
+FOR EACH ROW
+BEGIN
+    INSERT INTO product_history (
+        product_id, action, name, description, price, stock_quantity, category_id, currency_id
+    )
+    VALUES (
+        OLD.product_id, 'DELETE', OLD.name, OLD.description, OLD.price, OLD.stock_quantity, OLD.category_id, OLD.currency_id
+    );
+END;;
+DELIMITER ;
+-- end ng 3 to, magkakasama sila
