@@ -50,6 +50,15 @@ VALUES
 ('USD', '$', 1), 
 ('KRW', '₩', 1);
 
+-- do this for curreny table
+ALTER TABLE Currencies
+DROP COLUMN exchange_rate_to_usd;
+
+INSERT INTO Currencies (currency_code, symbol)
+VALUES 
+('JPY', '¥'),
+('EUR', '€');
+
 
 -- Products Table
 CREATE TABLE Products (
