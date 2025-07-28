@@ -11,22 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment'])) {
     $payment_status = 'Paid'; // or 'Pending'
     $cart = json_decode($_POST['cart_json'], true);
 
-  $currency = strtoupper($_POST['currency']); // Normalize input to uppercase
+    // Get currency_id from Currencies table
+    $currency_id = null;
+    $stmt = $conn->prepare("SELECT currency_id FROM Currencies WHERE currency_code = ?");
+    $stmt->bind_param("s", $currency);
+    $stmt->execute();
+    $stmt->bind_result($currency_id);
+    $stmt->fetch();
+    $stmt->close();
 
-// Get currency_id from Currencies table
-$currency_id = null;
-$stmt = $conn->prepare("SELECT currency_id FROM Currencies WHERE currency_code = ?");
-$stmt->bind_param("s", $currency);
-$stmt->execute();
-$stmt->bind_result($currency_id);
-$stmt->fetch();
-$stmt->close();
-
-// Fallback to PHP (ID 1) if not found
-if (!$currency_id) {
-    $currency_id = 1;
-}
-
+    // Fallback to PHP (ID 1) if not found
+    if (!$currency_id) {
+        $currency_id = 1;
+    }
 
     // 1. Insert into Orders
     $stmt = $conn->prepare("INSERT INTO Orders (user_id, total_amount, currency_id) VALUES (?, ?, ?)");
@@ -44,8 +41,8 @@ if (!$currency_id) {
     }
 
     // 3. Insert into Transaction_Log
-$stmt = $conn->prepare("INSERT INTO Transaction_Log (order_id, payment_method, payment_status, amount, currency_id) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_amount, $currency_id);
+    $stmt = $conn->prepare("INSERT INTO Transaction_Log (order_id, payment_method, payment_status, amount, currency_id) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_amount, $currency_id);
     $stmt->execute();
     $stmt->close();
 
@@ -55,6 +52,7 @@ $stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_a
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,9 +88,6 @@ $stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_a
                 currencySymbol = '₩';
             }
 
-            
-
-
             // Calculate the converted amount
             convertedAmount = totalAmount * conversionRate;
 
@@ -111,14 +106,11 @@ $stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_a
             // Hide all payment forms first
             document.getElementById('creditCardForm').style.display = 'none';
             document.getElementById('debitCardForm').style.display = 'none';
-            document.getElementById('codMessage').style.display = 'none';
 
             if (paymentMethod === 'creditCard') {
                 document.getElementById('creditCardForm').style.display = 'block';
             } else if (paymentMethod === 'debitCard') {
                 document.getElementById('debitCardForm').style.display = 'block';
-            } else if (paymentMethod === 'cashOnDelivery') {
-                document.getElementById('codMessage').style.display = 'block';
             }
         }
 
@@ -167,7 +159,6 @@ $stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_a
             <select id="paymentMethod" name="payment_method" onchange="showPaymentForm()" required>
                 <option value="creditCard">Credit Card</option>
                 <option value="debitCard">Debit Card</option>
-                <option value="cashOnDelivery">Cash on Delivery</option>
             </select>
 
             <br><br>
@@ -187,26 +178,9 @@ $stmt->bind_param("issdi", $order_id, $payment_method, $payment_status, $total_a
             <!-- Converted Price -->
             <p><strong>Converted Amount:</strong> <span id="convertedAmount"></span></p>
 
-            <!-- Credit Card Details -->
-            <div id="creditCardForm" style="display:none;">
-                <p><strong>Enter Credit Card Details:</strong></p>
-                <input type="text" placeholder="Card Number" id="cardNumber" name="card_number"><br><br>
-                <input type="text" placeholder="Expiration Date" id="expDate" name="exp_date"><br><br>
-                <input type="text" placeholder="CVV" id="cvv" name="cvv"><br><br>
-            </div>
+            <!-- Credit Card Details (Removed) -->
 
-            <!-- Debit Card Details -->
-            <div id="debitCardForm" style="display:none;">
-                <p><strong>Enter Debit Card Details:</strong></p>
-                <input type="text" placeholder="Card Number" id="debitCardNumber" name="debit_card_number"><br><br>
-                <input type="text" placeholder="Expiration Date" id="debitExpDate" name="debit_exp_date"><br><br>
-                <input type="text" placeholder="CVV" id="debitCvv" name="debit_cvv"><br><br>
-            </div>
-
-            <!-- Cash on Delivery (COD) Message -->
-            <div id="codMessage" style="display:none;">
-                <p><strong>You selected Cash on Delivery. Please have the exact amount ready upon delivery.</strong></p>
-            </div>
+            <!-- Debit Card Details (Removed) -->
 
             <!-- Hidden fields for backend processing -->
             <input type="hidden" name="amount" id="hiddenAmount" value="">
