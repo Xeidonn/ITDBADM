@@ -216,9 +216,7 @@ $result = $conn->query($sql);
         </nav>
     </header>
 
-    <section class="hero">
-        <h2>Welcome to XD Hobby Shop!<br>Explore the best Trading Card Games</h2>
-    </section>
+    <section class="hero" style="background: url('XD Banner.png') center/cover no-repeat;"></section>
 
     <section class="content">
         <h3>Featured Product!</h3>
