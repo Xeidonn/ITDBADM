@@ -724,6 +724,126 @@
               ],
               "name": null
             }
+          },
+          {
+            "position": {
+              "x": 707,
+              "y": -130.9999999999996
+            },
+            "size": {
+              "width": 220,
+              "height": 200
+            },
+            "attrs": {
+              "text": {
+                "text": "Authorzation Provider"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "process",
+            "ports": {
+              "groups": {
+                "top": {
+                  "position": "top",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "position": "right",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "bottom": {
+                  "position": "bottom",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "left": {
+                  "position": "left",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                }
+              },
+              "items": [
+                {
+                  "group": "top",
+                  "id": "9bb7d6b7-bd6f-4a41-afc0-1ea522ff2069"
+                },
+                {
+                  "group": "right",
+                  "id": "8d739122-ee78-47c2-b426-a45d13439b5d"
+                },
+                {
+                  "group": "bottom",
+                  "id": "0e6d9d11-ab62-40d6-95c9-ac2b8cf2fefc"
+                },
+                {
+                  "group": "left",
+                  "id": "b91720bb-2784-4c6c-8344-19fe80c1fda7"
+                }
+              ]
+            },
+            "id": "4e0f4288-9b17-4e19-943b-27678b8023c1",
+            "zIndex": 13,
+            "data": {
+              "type": "tm.Process",
+              "name": "Authorzation Provider",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "handlesCardPayment": false,
+              "handlesGoodsOrServices": false,
+              "isWebApplication": false,
+              "privilegeLevel": "",
+              "threats": []
+            }
           }
         ]
       }
