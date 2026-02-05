@@ -580,6 +580,40 @@
             ]
           },
           {
+            "shape": "trust-boundary-curve",
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Boundary",
+              "name": "Generic Trust Boundary",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false,
+              "crossingFlows": [],
+              "containedElements": []
+            },
+            "labels": [
+              "Generic Trust Boundary"
+            ],
+            "id": "95f1858f-c41a-44e9-bb61-d1e9f8b7083d",
+            "source": {
+              "x": 1140,
+              "y": -140
+            },
+            "target": {
+              "x": 1150,
+              "y": 560
+            },
+            "vertices": [
+              {
+                "x": 1060,
+                "y": 250
+              }
+            ]
+          },
+          {
             "position": {
               "x": 1250,
               "y": 360
@@ -603,6 +637,7 @@
             },
             "visible": true,
             "shape": "store",
+            "zIndex": 11,
             "ports": {
               "groups": {
                 "top": {
@@ -686,7 +721,6 @@
               ]
             },
             "id": "da1bd863-fb3b-48e1-9308-29f1b8374cac",
-            "zIndex": 11,
             "data": {
               "type": "tm.Store",
               "name": "SQL",
@@ -770,6 +804,7 @@
             },
             "visible": true,
             "shape": "process",
+            "zIndex": 13,
             "ports": {
               "groups": {
                 "top": {
@@ -853,7 +888,6 @@
               ]
             },
             "id": "4e0f4288-9b17-4e19-943b-27678b8023c1",
-            "zIndex": 13,
             "data": {
               "type": "tm.Process",
               "name": "Authorzation Provider",
@@ -939,6 +973,7 @@
             },
             "visible": true,
             "shape": "store",
+            "zIndex": 15,
             "ports": {
               "groups": {
                 "top": {
@@ -1022,7 +1057,6 @@
               ]
             },
             "id": "2856bd75-8505-4c22-9e20-cf97fca8e3b2",
-            "zIndex": 15,
             "data": {
               "type": "tm.Store",
               "name": "LDAP",
@@ -1086,6 +1120,11 @@
             },
             "tools": {
               "items": [
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
                 "boundary",
                 "button-remove",
                 "vertices",
@@ -1191,6 +1230,36 @@
                 "button-remove",
                 "vertices",
                 "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
                 "target-arrowhead"
               ],
               "name": null
@@ -1220,8 +1289,8 @@
               "y": 30
             },
             "target": {
-              "x": 1140,
-              "y": 100
+              "x": 1040,
+              "y": 140
             },
             "vertices": [
               {
@@ -1231,8 +1300,62 @@
               {
                 "x": 920,
                 "y": 170
+              },
+              {
+                "x": 1030,
+                "y": 150
               }
-            ]
+            ],
+            "tools": {
+              "items": [
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead"
+              ],
+              "name": null
+            }
           }
         ]
       }
