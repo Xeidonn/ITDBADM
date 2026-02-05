@@ -725,14 +725,34 @@
                   "new": false,
                   "number": 2,
                   "score": ""
+                },
+                {
+                  "id": "d9a6ebc0-7e5e-4634-9196-f82c02a467ef",
+                  "title": "Unverified SQL Database Data Writes",
+                  "status": "Open",
+                  "severity": "TBD",
+                  "type": "Repudiation",
+                  "description": "The SQL Database claims that it did not write data received from an entity on the other side of the trust boundary.",
+                  "mitigation": "Consider using logging or auditing to record the source, time and a summary of the received data.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 5,
+                  "score": ""
                 }
               ],
               "threatFrequency": {
                 "tampering": 1,
-                "repudiation": 0,
+                "repudiation": 1,
                 "informationDisclosure": 0,
                 "denialOfService": 0
               }
+            },
+            "tools": {
+              "items": [
+                "boundary",
+                "button-remove"
+              ],
+              "name": null
             }
           },
           {
@@ -1419,6 +1439,6 @@
     ],
     "diagramTop": 3,
     "reviewer": "",
-    "threatTop": 4
+    "threatTop": 5
   }
 }
