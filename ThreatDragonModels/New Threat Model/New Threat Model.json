@@ -1186,10 +1186,53 @@
                 "button-remove",
                 "vertices",
                 "source-arrowhead",
+                "target-arrowhead",
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
                 "target-arrowhead"
               ],
               "name": null
             }
+          },
+          {
+            "shape": "trust-boundary-curve",
+            "width": 200,
+            "height": 100,
+            "zIndex": 18,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Boundary",
+              "name": "Generic Trust Boundary",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false,
+              "crossingFlows": [],
+              "containedElements": []
+            },
+            "labels": [
+              "Generic Trust Boundary"
+            ],
+            "id": "9d9432ef-5893-408f-9e95-e83aa0382325",
+            "source": {
+              "x": 460,
+              "y": 30
+            },
+            "target": {
+              "x": 1140,
+              "y": 100
+            },
+            "vertices": [
+              {
+                "x": 650,
+                "y": 140
+              },
+              {
+                "x": 920,
+                "y": 170
+              }
+            ]
           }
         ]
       }
