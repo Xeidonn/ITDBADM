@@ -287,13 +287,6 @@
                 "denialOfService": 0,
                 "elevationOfPrivilege": 0
               }
-            },
-            "tools": {
-              "items": [
-                "boundary",
-                "button-remove"
-              ],
-              "name": null
             }
           },
           {
@@ -1116,14 +1109,34 @@
                   "new": false,
                   "number": 3,
                   "score": ""
+                },
+                {
+                  "id": "f4bcb6b0-ce33-4a8f-873e-afd1a507308e",
+                  "title": "Missing LDAP Write Logging",
+                  "status": "Open",
+                  "severity": "TBD",
+                  "type": "Repudiation",
+                  "description": "LDAP claims that it did not write data received from an entity on the other side of the trust boundary.",
+                  "mitigation": "Consider using logging or auditing to record the source, time and a summary of the received data.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 7,
+                  "score": ""
                 }
               ],
               "threatFrequency": {
                 "tampering": 1,
-                "repudiation": 0,
+                "repudiation": 1,
                 "informationDisclosure": 0,
                 "denialOfService": 0
               }
+            },
+            "tools": {
+              "items": [
+                "boundary",
+                "button-remove"
+              ],
+              "name": null
             }
           },
           {
@@ -1452,6 +1465,6 @@
     ],
     "diagramTop": 3,
     "reviewer": "",
-    "threatTop": 6
+    "threatTop": 7
   }
 }
