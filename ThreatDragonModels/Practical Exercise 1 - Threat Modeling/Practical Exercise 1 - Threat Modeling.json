@@ -11,7 +11,34 @@
     "diagrams": [
       {
         "id": 0,
-        "title": "Practical Exercise 1 - Threat Modeling",
+        "title": "4. Administrator Adds New Menu Item",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.6.1-RC1",
+        "cells": []
+      },
+      {
+        "id": 1,
+        "title": "2. Barista Updates Order Status",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.6.1-RC1",
+        "cells": []
+      },
+      {
+        "id": 2,
+        "title": "1. Customer Places an Order",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.6.1-RC1",
+        "cells": []
+      },
+      {
+        "id": 3,
+        "title": "3. Manager Accesses Basic Sales Reports",
         "diagramType": "STRIDE",
         "placeholder": "New STRIDE diagram description",
         "thumbnail": "./public/content/images/thumbnail.stride.jpg",
@@ -19,7 +46,7 @@
         "cells": []
       }
     ],
-    "diagramTop": 1,
+    "diagramTop": 4,
     "reviewer": "",
     "threatTop": 0
   }
